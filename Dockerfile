@@ -1,8 +1,5 @@
 FROM ubuntu:20.04
 
-# File Maintainer
-MAINTAINER Manuel Rueda <manuel.rueda@cnag.eu>
-
 # Build env 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
