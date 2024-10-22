@@ -552,23 +552,26 @@ sub prune_genotypes {
 
         # GT
         if ( $n_format == 1 ) {
-            next unless $genotypes->[$i] =~ tr/1//;
+            if ($genotypes->[$i] =~ tr/1//) {
+              # Increment number of called GT
+              $calls++;
+            }
             $tmp_ref = { $sample_id->{$i} => { GT => $genotypes->[$i] } };
         }
 
         # GT:GQ:DP:HQ
         else {
             $genotypes->[$i] =~ m/^(.*?):/;    #  GT:
-            next unless $1   =~ tr/1//;
+            if ($1 =~ tr/1//) {
+              # Increment number of called GT
+              $calls++;
+            }
             my @fields = split /:/, $genotypes->[$i];
             while ( my ( $key, $val ) = each %format_field ) {
                 $tmp_ref->{ $sample_id->{$i} }{$key} = $fields[$val]
                   if $fields[$val];
             }
         }
-
-        # Increment number of called GT
-        $calls++;
 
         # Finally load the array
         push @{$pruned_genotypes}, $tmp_ref;
