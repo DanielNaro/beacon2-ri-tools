@@ -520,6 +520,8 @@ sub mapping2beacon {
     $genomic_variations->{caseLevelData} = [];    # array ref
 
     my %zygosity = (
+        '0/0' => 'GENO_0000136',
+        '0|0' => 'GENO_0000136',
         '0/1' => 'GENO_0000458',
         '0|1' => 'GENO_0000458',
         '1/0' => 'GENO_0000458',
