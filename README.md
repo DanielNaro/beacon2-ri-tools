@@ -1,56 +1,79 @@
-[![Docker build](https://github.com/EGA-archive/beacon2-ri-tools/actions/workflows/docker-build.yml/badge.svg)](https://github.com/EGA-archive/beacon2-ri-tools/actions/workflows/docker-build.yml)
+[![Docker build](https://github.com/mrueda/beacon2-ri-tools/actions/workflows/docker-build.yml/badge.svg)](https://github.com/mrueda/beacon2-ri-tools/actions/workflows/docker-build.yml)
 [![Documentation Status](https://readthedocs.org/projects/b2ri-documentation/badge/?version=latest)](https://b2ri-documentation.readthedocs.io/en/latest/?badge=latest)
 ![Maintenance status](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Docker Pulls](https://badgen.net/docker/pulls/manuelrueda/beacon2-ri-tools?icon=docker&label=pulls)](https://hub.docker.com/r/manuelrueda/beacon2-ri-tools/)
+[![Docker Pulls EGA-archive](https://badgen.net/docker/pulls/beacon2ri/beacon_reference_implementation?icon=docker&label=EGA-archive-pulls)](https://hub.docker.com/r/beacon2ri/beacon_reference_implementation/)
+![version](https://img.shields.io/badge/version-2.0.3-blue)
+
+**Documentation**: <a href="https://b2ri-documentation.readthedocs.io/" target="_blank">https://b2ri-documentation.readthedocs.io/</a>
+
+**CLI Source Code**: <a href="https://github.com/mrueda/beacon2-ri-tools" target="_blank">https://github.com/mrueda/beacon2-ri-tools</a>
+
+**Docker Hub Image**: <a href="https://hub.docker.com/r/manuelrueda/beacon2-ri-tools/tags" target="_blank">https://hub.docker.com/r/manuelrueda/beacon2-ri-tools/tags</a>
+
 # NAME
 
-`beacon`: A script to transform **genomic variations data** (VCF) to queryable data (MongoDB)
+`beacon`: A script to **annotate** and **transform** genomic variations data (**VCF**) to queryable data (**MongoDB**)
+
+(Actively maintained by the original author)
 
 # SYNOPSIS
 
-beacon &lt;mode> \[-arguments\] \[-options\]
+    beacon <mode> [-arguments] [-options]
 
-    Mode:
-      vcf 
-        -i|input                       Requires a VCF.gz file
-                                       (May require a parameters file)
+      Mode:
+        vcf
+          -i | --input <file>            Requires a VCF.gz file
+                                         (May require a parameters file)
 
-      mongodb
-                                       (May require a parameters file)
+        mongodb
+                                         (May require a parameters file)
 
-      full (vcf + mongodb)
-        -i|input                       Requires a VCF.gz file
-                                       (May require a parameters file)
+        full (vcf + mongodb)
+          -i | --input <file>            Requires a VCF.gz file
+                                         (May require a parameters file)
 
-    Options:
-        -h|help                        Brief help message
-        -man                           Full documentation
-        -v                             Version
-        -c                             Requires a configuration file
-        -p                             Requires a parameters file
-        -n                             Number of cpus/cores/threads
-        -debug                         Print debugging (from 1 to 5, being 5 max)
-        -verbose                       Verbosity on
-        -nc|-no-color                  Don't print colors to STDOUT
-
-        (For convenience, specifiers may have a leading - or --)
+      Options:
+          -h                             Brief help message
+          -man                           Full documentation
+          -v                             Display version information
+          -c | --config <file>           Requires a configuration file
+          -p | --param <file>            Requires a parameters file (optional)
+          -n <number>                    Number of CPUs/cores/threads (optional)
+          -debug <level>                 Print debugging information (from 1 to 5, with 5 being the max) (optional)
+          -verbose                       Enable verbosity (optional)
+          -nc | --no-color               Do not print colors to STDOUT (optional)
 
 # DESCRIPTION
 
-`beacon` is a script to transform **genomic variations data** (VCF) to queryable data (MongoDB). See extended documentation [here](https://b2ri-documentation.readthedocs.io/en/latest/data-ingestion).
+**beacon2-ri-tools** repository, part of the ELIXIR-CRG Beacon v2 Reference Implementation (B2RI), includes:
 
-The VCF data are annotated and then serialized to a JSON text file (`genomicVariationsVcf.json.gz`). The script also enables data load of the [BFF](#what-is-the-beacon-friendly-format-bff) to MongoDB. 
+- The `beacon` script
+- A suite of [utilities](https://github.com/mrueda/beacon2-ri-tools/tree/main/utils) aiding in data ingestion
 
-`beacon` is part of the [beacon2-ri-tools](#readme-md) package, which also contains other [utilities](https://github.com/EGA-archive/beacon2-ri-tools/tree/main/utils) to help with data ingestion.
+### `beacon`
 
-**beacon2-ri-tools** repository is part of the ELIXIR-CRG Beacon v2 Reference Implementation (B2RI).  
+`beacon`, a script with three operational modes for diverse actions:
+
+- Mode vcf
+
+    Converts **genomic variation data** (VCF) into queryable MongoDB format. Extended documentation is available [here](https://b2ri-documentation.readthedocs.io/en/latest/data-ingestion). The VCF data are annotated and serialized into `genomicVariationsVcf.json.gz`.
+
+- Mode mongodb
+
+    Facilitates loading [BFF](#what-is-the-beacon-friendly-format-bff) data into MongoDB.
+
+- Mode full: Combines vcf and mongodb
+
+### B2RI diagram
 
                 * Beacon v2 Reference Implementation *
 
                     ___________
-                    |          |
-              XLSX  | Metadata | (incl. Phenotypic data)
-                    |__________|
+              XLSX  |          |
+               or   | Metadata | (incl. Phenotypic data)
+              JSON  |__________|
                          |
                          |
                          | Validation (bff-validator)
@@ -78,19 +101,47 @@ The VCF data are annotated and then serialized to a JSON text file (`genomicVari
 
 # INSTALLATION
 
-We provide two installation options, one containerized (recommended) and another non-containerized.
+We provide two installation options for `beacon2-ri-tools`, one containerized (recommended) and another non-containerized.
 
 ## Containerized
 
-Download the `Dockerfile` from [Github](https://github.com/EGA-archive/beacon2-ri-tools/blob/main/Dockerfile) by typing:
+### Method 1: From Docker Hub
 
-    wget https://raw.githubusercontent.com/EGA-archive/beacon2-ri-tools/main/Dockerfile
+Download a docker image (latest version) from [Docker Hub](https://hub.docker.com/r/manuelrueda/beacon2-ri-tools) by executing:
+
+    docker pull manuelrueda/beacon2-ri-tools:latest
+    docker image tag manuelrueda/beacon2-ri-tools:latest crg/beacon2_ri:latest
+
+See additional instructions below.
+
+### Method 2: From Dockerfile
+
+Download the `Dockerfile` from [Github](https://github.com/mrueda/beacon2-ri-tools/blob/main/Dockerfile) by typing:
+
+    wget https://raw.githubusercontent.com/mrueda/beacon2-ri-tools/main/Dockerfile
 
 Then execute the following commands:
 
-    docker build -t crg/beacon2_ri:latest . # build the container (~1.1G)
+    docker buildx build -t crg/beacon2_ri:latest . # build the container (~1.1G)
 
-**IMPORTANT:** Docker containers are fully isolated. If you think you'll have to mount a volume to the container please read the section [Mounting Volumes](#readme-md-mounting-volumes) before proceeding further.
+### Additional instructions for Methods 1 and 2
+
+If MongoDB has not been installed alongside the `beacon2-ri-api` repository, it will be necessary to install it separately. MongoDB should be deployed outside the `beacon2-ri-tools` container.
+
+Please download the `docker-compose.yml` file:
+
+    wget https://raw.githubusercontent.com/mrueda/beacon2-ri-tools/main/docker-compose.yml
+
+And then execute:
+
+    docker network create my-app-network
+    docker-compose up -d
+
+Mongo Express will be accessible via `http://localhost:8081` with default credentials `admin` and `pass`.
+
+**IMPORTANT:** Docker containers are fully isolated. If you think you'll have to mount a volume to the container please read the section [Mounting Volumes](#mounting-volumes) before proceeding further.
+
+**IMPORTANT (BIS):** If you plan to load data into MongoDB from inside `beacon2-ri-tools` container please read the section [Access MongoDB from inside the container](#access-mongodb-from-inside-the-container) before proceeding further.
 
     docker run -tid --name beacon2-ri-tools crg/beacon2_ri:latest # run the image detached
     docker ps  # list your containers, beacon2-ri-tools should be there
@@ -98,21 +149,11 @@ Then execute the following commands:
 
 After the `docker exec` command, you will land at `/usr/share/beacon-ri/`, then execute:
 
-    nohup beacon2-ri-tools/BEACON/bin/deploy_external_tools.sh &
+    nohup beacon2-ri-tools/lib/BEACON/bin/deploy_external_tools.sh &
 
 ...that will inject the external tools and DBs into the image and modify the [configuration](#readme-md-setting-up-beacon) files. It will also run a test to check that the installation was succesful. Note that running `deploy_external_tools.sh` will take some time (and disk space!!!). You can check the status by using:
 
     tail -f nohup.out
-
-The last step is to deploy MongoDB. We will deploy it **outside** the `beacon2-ri-tools` container so please `exit` from it.
-
-Please download the `docker-compose.yml` file: 
-
-    wget https://raw.githubusercontent.com/EGA-archive/beacon2-ri-tools/main/docker-compose.yml
-
-And then execute:
-
-    docker-compose up -d
 
 ### Mounting volumes
 
@@ -126,7 +167,7 @@ Now you'll need to execute:
 
 After the `docker exec` command, you will land at `/usr/share/beacon-ri/`, then execute:
 
-    nohup beacon2-ri-tools/BEACON/bin/deploy_external_tools.sh & # see above why
+    nohup beacon2-ri-tools/lib/BEACON/bin/deploy_external_tools.sh & # see above why
 
 Then, you can run commands **inside the container**, like this;
 
@@ -146,21 +187,23 @@ Alternatively, you can run commands **from the host**, like this:
     # Finally we use the alias to run the command
     beacon vcf -i /workdir/my_vcf.gz -p /workdir/param.in 
 
+### Access MongoDB from inside the container
+
+If you want to load data from **inside** the `beacon2-ri-tools` directly to `mongo` container, both containers have to be on the same network:
+
+    docker run -tid --network=my-app-network --name beacon2-ri-tools crg/beacon2_ri:latest # change the network to match yours
+
 ## Non containerized
 
-Download the latest version from [Github](https://github.com/EGA-archive/beacon2-ri-tools):
+Download the latest version from [Github](https://github.com/mrueda/beacon2-ri-tools):
 
     tar -xvf beacon2-ri-tools-2.0.0.tar.gz    # Note that naming may be different
 
 Alternatively, you can use git clone to get the latest (stable) version
 
-    git clone https://github.com/EGA-archive/beacon2-ri-tools.git
+    git clone https://github.com/mrueda/beacon2-ri-tools.git
 
-`beacon` is a Perl script (no compilation needed) that runs on Linux command-line. Internally, it submits multiple pipelines via customizable Bash scripts (see example [here](https://github.com/EGA-archive/beacon2-ri-tools/blob/main/BEACON/bin/run_vcf2bff.sh)). Note that Perl and Bash are installed by default in Linux.
-
-Perl 5 is installed by default on Linux, but we will need to install a few CPAN modules.
-
-For simplicity, we're going to install the modules (they're harmless) with sudo privileges.
+`beacon` is a Perl script (no compilation needed) that runs on Linux command-line. Internally, it submits multiple pipelines via customizable Bash scripts (see example [here](https://github.com/mrueda/beacon2-ri-tools/blob/main/lib/BEACON/bin/run_vcf2bff.sh)). Note that Perl and Bash are installed by default in Linux, but we will need to install a few dependencies.
 
 (For Debian and its derivatives, Ubuntu, Mint, etc.)
 
@@ -168,21 +211,24 @@ First we install `cpmanminus` utility:
 
     sudo apt-get install cpanminus
 
-Second we use `cpanm` to install the CPAN modules. Change directory into the `beacon2-ri-tools` folder and run:
-
-    cpanm --sudo --installdeps .
-
 Also, to read the documentation you'll need `perldoc` that may or may not be installed in your Linux distribution:
 
     sudo apt-get install perl-doc
 
-If you prefer to have the dependencies in a "virtual environment" (i.e., install the CPAN modules in the directory of the application) we recommend using the module `Carton`.
+Second we use `cpanm` to install the CPAN modules. You have two choose between one of the 2 options below. Change directory into the `beacon2-ri-tools` folder and run:
 
-    cpanm --sudo Carton
+**Option 1:** System-level installation:
 
-Then, we can install our dependencies:
+    cpanm --notest --sudo --installdeps .
 
-    carton install
+**Option 2:** Install the dependencies at `~/perl5`
+
+    cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+    cpanm --notest --installdeps .
+
+To ensure Perl recognizes your local modules every time you start a new terminal, you should type:
+
+    echo 'eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)' >> ~/.bashrc
 
 `beacon` also needs that **bcftools**, **SnpEff** and **MongoDB** are installed. See [external software](https://b2ri-documentation.readthedocs.io/en/latest/download-and-installation/#non-containerized-version-data-ingestion-tools) for more info.
 
@@ -311,9 +357,9 @@ The Perl itself does not need a lot of RAM (max load will reach 400MB) but exter
 
 ### Testing the code
 
-I am not using any CPAN's module to perform unit tests. When I modify the code my "integration tests" are done by comparing to reference files. You can validate the installation using the files included in the [test](https://github.com/EGA-archive/beacon2-ri-tools/tree/main/test) directory.
+I am not using any CPAN's module to perform unit tests. When I modify the code my "integration tests" are done by comparing to reference files. You can validate the installation using the files included in the [test](https://github.com/mrueda/beacon2-ri-tools/tree/main/test) directory.
 
-# HOW TO RUN BEACON
+# HOW TO RUN `beacon`
 
 We recommend following this [tutorial](https://b2ri-documentation.readthedocs.io/en/latest/tutorial-data-beaconization).
 
@@ -321,7 +367,7 @@ This script has three **modes**: `vcf, mongodb` and `full`
 
 **\* Mode `vcf`**
 
-Converting a VCF file into a BFF file for genomic variations.
+Annotating and serializing a VCF file into a BFF file for genomic variations.
 
 **\* Mode `mongodb`**
 
@@ -329,7 +375,7 @@ Loading BFF data into MongoDB.
 
 **\* Mode `full`**
 
-Ingesting VCF and loading metadata and genomic variations (all in one step) into MongoDB.
+Mode vcf + mode mongodb.
 
 To perform all these taks you'll need: 
 
@@ -347,7 +393,7 @@ To perform all these taks you'll need:
 
 - (Optional) Specify the number of cores (only for VCF processing!)
 
-    The number of threads/cores you want to use for the job. In this regard (since SnpEff does not deal well with parallelization) we recommend using `-n 1` and running multiple simultaneous jobs with GNU `parallel` or the included [queue system](https://github.com/EGA-archive/beacon2-ri-tools/tree/main/utils/bff_queue)). The software scales linearly {O}(n) with the number of variations present in the input file. The easiest way is to run one job per chromosome, but if you are in a hurry and have many cores you can split each chromosome into smaller vcfs.
+    The number of threads/cores you want to use for the job. In this regard (since SnpEff does not deal well with parallelization) we recommend using `-n 1` and running multiple simultaneous jobs with GNU `parallel` or the included [queue system](https://github.com/mrueda/beacon2-ri-tools/tree/main/utils/bff_queue)). The software scales linearly {O}(n) with the number of variations present in the input file. The easiest way is to run one job per chromosome, but if you are in a hurry and have many cores you can split each chromosome into smaller vcfs.
 
 `beacon` will create an independent project directory `projectdir` and store all needed information needed there. Thus, many concurrent calculations are supported.
 Note that `beacon` will treat your data as _read-only_ (i.e., will not modify your original files).
@@ -438,19 +484,17 @@ The purpose of such HTML file is to provide a preliminary exploration of the gen
 
     $ parallel "./beacon vcf -n 1 -i chr{}.vcf.gz  > chr{}.log 2>&1" ::: {1..22} X Y
 
-    $ carton exec -- ./beacon vcf -i input.vcf.gz # If using Carton 
-
 _NB_: If you don't want colors in the output use the flag `--no-color`. If you did not use the flag and want to get rid off the colors in your printed log file use this command to parse ANSI colors:
 
     perl -pe 's/\x1b\[[0-9;]*[mG]//g'
 
 ## WHAT IS THE BEACON FRIENDLY FORMAT (BFF)
 
-Beacon Friendly Format is a set of 7 JSON files (JSON arrays consisting of multiple documents) that match the 7 schemas from [Beacon v2 Models](https://docs.genomebeacons.org/schemas-md/analyses_defaultSchema/).
+The Beacon Friendly Format is a data exchange format consisting up to  7 JSON files (JSON arrays) that match the 7 schemas from [Beacon v2 Models](https://docs.genomebeacons.org/schemas-md/analyses_defaultSchema/).
 
 Six files correspond to Metadata (`analyses.json,biosamples.json,cohorts.json,datasets.json,individuals.json,runs.json`) and one corresponds to variations (`genomicVariations.json`).
 
-Normally, `beacon` script is used to create `genomicVariations` JSON file. The other 6 files are created with [this utility](https://github.com/EGA-archive/beacon2-ri-tools/tree/main/utils/bff_validator) (part of the distribution). See instructions [here](https://github.com/EGA-archive/beacon2-ri-tools/tree/main/utils/bff_validator/README.md).
+Normally, `beacon` script is used to create `genomicVariations` JSON file. The other 6 files are created with [this utility](https://github.com/mrueda/beacon2-ri-tools/tree/main/utils/bff_validator) (part of the distribution). See instructions [here](https://github.com/mrueda/beacon2-ri-tools/tree/main/utils/bff_validator/README.md).
 
 Once we have all seven files, then we can proceed to load the data into MongoDB.
 
@@ -521,8 +565,8 @@ Credits:
 
 # REPORTING BUGS
 
-For Beacon problems, questions, or suggestions, send an e-mail to manuel.rueda@crg.eu.
+For Beacon problems, questions, or suggestions, send an e-mail to manuel.rueda@cnag.eu.
 
 # COPYRIGHT and LICENSE
 
-This PERL file is copyrighted, (C) 2021-2022 Manuel Rueda. See the LICENSE file included in this distribution.
+This PERL file is copyrighted, (C) 2021-2024 Manuel Rueda. See the LICENSE file included in this distribution.

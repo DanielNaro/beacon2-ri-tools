@@ -6,11 +6,11 @@
 #       b) Standard JSON [json] (STDOUT)
 #       c) Perl hash data structure [hash] (STDOUT)
 #
-#   Last Modified: May/09/2022
+#   Last Modified: Nov/26/2023
 #
-#   Version 2.0.0
+#   Version taken from $beacon
 #
-#   Copyright (C) 2021-2022 Manuel Rueda (manuel.rueda@crg.eu)
+#   Copyright (C) 2021-2024 Manuel Rueda (manuel.rueda@cnag.eu)
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ exit;
 sub vcf2bff {
 
     # Defining a few variables
-    my $version  = '2.0.0';
+    my $version  = '2.0.1';
     my $DEFAULT  = '.';
     my $exe_path = abs_path($0);
     my $cwd      = cwd;
@@ -120,7 +120,7 @@ sub vcf2bff {
     ) if ( !-f $filein );
     pod2usage(
         -message =>
-          "Please specify a valid reference genome --genome <hs37|hg37|hg38>\n",
+          "Please specify a valid reference genome --genome <hg19|hg38>\n",
         -exitval => 1
     ) unless ($genome);
     pod2usage(
@@ -388,7 +388,7 @@ $prompt, $param, $arrow, $param{$param}
             # an unique ref hash named $hash_out. Note that $hash_out will have information per ONE variant.
             # We CANNOT STORE ALL VARIANTS IN ONE UNIQUE HASH, AS IT WILL REQUIRE A LOT OF MEMORY
             # WE ARE PRINTING LINE-BY-LINE
-            my $hash_out = ();
+            my $hash_out = {};
 
             # The first level of the hash == VCF column level (@keys2load)
             foreach my $key (@keys2load) {
@@ -406,6 +406,7 @@ $prompt, $param, $arrow, $param{$param}
             #  PRINTING ACCORDING TO USER PARAMETERS    #
             #############################################
 
+            # Initialize the object with data - Overhead time is negligible
             my $bff = BFF->new($hash_out);
 
             # Serialize the data structure to the desired format
@@ -714,7 +715,7 @@ from which I borrowed the concept for creating vcf2bff.pl.
 
 =head1 REPORTING BUGS
 
-Report bugs or comments to L<manuel.rueda@crg.eu>.
+Report bugs or comments to L<manuel.rueda@cnag.eu>.
 
 
 =head1 COPYRIGHT

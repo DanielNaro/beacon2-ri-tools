@@ -4,24 +4,24 @@ bff-validator: A script that validates metadata (XLSX|JSON) against Beacon v2 Mo
 
 # SYNOPSIS
 
-bff-validator -i &lt;file.xlsx|\*json> \[-options\]
+    bff-validator -i <file.xlsx|*.json> [-options]
 
-     Arguments:                       
-       -i|input                       Metadata xlsx file or *.json files
+      Arguments:
+        -i | --input <file.xlsx|*.json>   Metadata xlsx file or *.json files
 
-     Options:
-       -s|schema-dir                  Directory with JSON schemas (must have JSON pointers de-referenced)
-       -o|out-dir                     Output (existing) directory for the BFF files (only to be used if input => XLSX)
-       -gv                            Set this option if you want to process <genomicVariations> entity
-       -ignore-validation             Writes JSON collection regardless of results from validation against JSON schemas (AYOR!)
-       -h|help                        Brief help message
-       -man                           Full documentation
-       -debug                         Print debugging (from 1 to 5, being 5 max)
-       -verbose                       Verbosity on
-       -nc|-no-color                  Don't print colors to STDOUT
-     
-     Experimental:
-       -gv-vcf                        Set this option to read <genomicVariations.json> from <beacon vcf> (with one document x line)
+      Options:
+        -s | --schema-dir <directory>     Directory with JSON schemas (must have JSON pointers de-referenced)
+        -o | --out-dir <directory>        Output (existing) directory for the BFF files (only to be used if input is XLSX)
+        -gv                               Set this option if you want to process <genomicVariations> entity
+        -ignore-validation                Writes JSON collection regardless of results from validation against JSON schemas (AYOR!)
+        -h | --help                       Brief help message
+        -man                              Full documentation
+        -debug <level>                    Print debugging information (from 1 to 5, with 5 being the max)
+        -verbose                          Enable verbosity
+        -nc | --no-color                  Do not print colors to STDOUT
+
+      Experimental:
+        -gv-vcf                           Set this option to read <genomicVariations.json> from <beacon vcf> (with one document per line)
 
 # CITATION
 
@@ -44,21 +44,24 @@ First we install cpanminus (with sudo privileges):
 
 Second we use cpanm to install the CPAN modules:
 
-(Note that first you need to copy the following [cpanfile](https://raw.githubusercontent.com/EGA-archive/beacon2-ri-tools/main/cpanfile) to your current directory).
+First you need to copy the following [cpanfile](https://raw.githubusercontent.com/mrueda/beacon2-ri-tools/main/cpanfile) to your current directory.  You have two choose between one of the 2 options below:
 
-    $ cpanm --sudo --installdeps .
+**Option 1:** System-level installation:
 
-If you prefer to have the dependencies in a "virtual environment" (i.e., install the CPAN modules in the directory of the application) we recommend using the module Carton.
+    cpanm --notest --sudo --installdeps .
 
-    $ cpanm --sudo Carton
+**Option 2:** Install the dependencies at `~/perl5`
 
-Then, we can install our dependencies:
+    cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+    cpanm --notest --installdeps .
 
-    $ carton install
+To ensure Perl recognizes your local modules every time you start a new terminal, you should type:
+
+    echo 'eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)' >> ~/.bashrc
 
 Also, we're using _xlsx2csv_, which is a python script. 
 
-    $ sudo pip install xlsx2csv
+    $ pip install xlsx2csv
 
 For executing `bff-validator` you will need:
 
@@ -97,7 +100,7 @@ For executing `bff-validator` you will need:
 ## TIPS ON FILLING OUT THE EXCEL TEMPLATE
 
     * Please, before filling in any field, check out the provided template for ../../CINECA_synthetic_cohort_EUROPE_UK1/*xlsx
-    * You can use Unicode, however, the script will 'unidecode' arrays/objects (e.g., quotes from spanish keyboard) 
+    * The script accepts Unicode characters (encoded with utf-8)
     * Header fields: 
        - Dots ('.') represent objects: 
            Examples (values):
@@ -119,9 +122,6 @@ For executing `bff-validator` you will need:
                2 - ["foo","bar","baz"]
 
 ## COMMON ERRORS AND SOLUTIONS
-
-    * Error message: Wide character at foo.bar
-      Solution: You have Unicode (non-ASCII) characters (likely double quotes) in a place where they should not be.
 
     * Error message: , or } expected while parsing object/hash, at character offset 574 (before "]")
       Solution: Make sure you have the right amount of opening or closing keys/brackets.

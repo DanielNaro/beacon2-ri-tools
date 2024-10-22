@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-#   Script that generates HTML fomat from BFF
+#   Script that generates HTML format from BFF
 #
 #   Last Modified: Dec/14/02021
 #
-#   Version 2.0.0
+#   Version taken from $beacon
 #
-#   Copyright (C) 2021 Manuel Rueda (manuel.rueda@crg.eu)
+#   Copyright (C) 2021-2024 Manuel Rueda (manuel.rueda@cnag.eu)
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-#   Script that generates BFF fomat from VCF
+#   Script that generates BFF format from VCF
 #
 #   Last Modified: Dec/14/2021
 #
-#   Version 2.0.0
+#   Version taken from $beacon
 #
-#   Copyright (C) 2021 Manuel Rueda (manuel.rueda@crg.eu)
+#   Copyright (C) 2021-2024 Manuel Rueda (manuel.rueda@cnag.eu)
 #
 #   Credits: Dietmar Fernandez-Orth for creating bcftools/snpEff commands
 #
