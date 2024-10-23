@@ -548,7 +548,13 @@ sub mapping2beacon {
             };
         }
 
-        # ***** INTERNAL FIELD -> DP
+        # ***** INTERNAL FIELD -> 
+         if (! exists $sample->{ $tmp_ref->{biosampleId} }{DP}){
+                say "problem detected";
+                say "sample: $sample";
+                say "tmp_ref->{biosampleId}: $tmp_ref->{biosampleId}";
+                say "sample->{ tmp_ref->{biosampleId} }: ",$sample->{ $tmp_ref->{biosampleId} };
+        }
         $tmp_ref->{depth} = $sample->{ $tmp_ref->{biosampleId} }{DP}
           if exists $sample->{ $tmp_ref->{biosampleId} }{DP};
 
