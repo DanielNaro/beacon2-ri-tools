@@ -76,7 +76,8 @@ sub vcf2bff {
             url           => 'https://pcingola.github.io/SnpEff',
             databases     => {
                 ClinVar => {
-                    url =>'https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/archive_2.0/2021',
+                    url =>
+'https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/archive_2.0/2021',
                     version => '20211218'
                 },
                 COSMIC => {
@@ -155,7 +156,8 @@ sub vcf2bff {
     my $serialize = $serialize{$format};
 
     if ( $debug || $verbose ) {
-        say "$prompt\n$prompt vcf2bff $version\n$prompt vcf2bff exe $exe_path\n$prompt Author: $author\n$prompt";
+        say
+"$prompt\n$prompt vcf2bff $version\n$prompt vcf2bff exe $exe_path\n$prompt Author: $author\n$prompt";
         say "$prompt ARGUMENTS USED:";
         say "$prompt --i $filein";
         say "$prompt --genome $genome";
@@ -172,14 +174,17 @@ sub vcf2bff {
             write;
         }
 
-        format PARAMS =@|||||@<<<<<<<<<<<<<<<< @<< @<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< $prompt, $param, $arrow, $param{$param}.
+        format PARAMS =
+@|||||@<<<<<<<<<<<<<<<< @<< @<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+$prompt, $param, $arrow, $param{$param}
+.
 
         say "$prompt\n$prompt $spacer\n$prompt STARTING VCF2BFF";
     }
 
     #############################
     # NOTE ABOUT ANNOTATIONS    #
-    ############################# 
+    #############################
 
     # The annotations come in 4 flavours:
     #
@@ -317,7 +322,8 @@ sub vcf2bff {
               ? parse_ann_field( $info_hash{ANN}, \%ann_field_data_loc,
                 $#snpeff_fields, $uid, $vcf_fields_short{ALT}, $DEFAULT )
               : undef;
-            warn "** WARNING: Skipping <$uid> because it does not have the field INFO=<ID=ANN>"
+            warn
+"** WARNING: Skipping <$uid> because it does not have the field INFO=<ID=ANN>"
               and next
               unless defined $info_hash{ANN};
 
@@ -546,7 +552,7 @@ sub prune_genotypes {
 
         # GT
         if ( $n_format == 1 ) {
-            next unless $genotypes->[$i] =~ tr/1//;
+            next unless $genotypes->[$i] =~ tr/01//;
             $tmp_ref = { $sample_id->{$i} => { GT => $genotypes->[$i] } };
         }
 
