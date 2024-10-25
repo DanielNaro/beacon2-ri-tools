@@ -558,9 +558,17 @@ sub prune_genotypes {
 
         # GT:GQ:DP:HQ
         else {
+            if ($n_format != 5) {
+              say "error with n_format:",$n_format;
+              say "input was ", $format;
+            }
             $genotypes->[$i] =~ m/^(.*?):/;    #  GT:
             next unless $1   =~ tr/1//;
             my @fields = split /:/, $genotypes->[$i];
+            if (@fields != $n_format) {
+                say "error: Expected $n_format fields, but got " . scalar(@fields) . " fields at index $i.\n";
+                say "Input data: " . $genotypes->[$i] . "\n";
+            }
             while ( my ( $key, $val ) = each %format_field ) {
                 $tmp_ref->{ $sample_id->{$i} }{$key} = $fields[$val]
                   if $fields[$val];
